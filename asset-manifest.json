@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Xperts-Frontend/static/css/main.7bed1b01.css",
+    "main.js": "/Xperts-Frontend/static/js/main.60f495c5.js",
+    "index.html": "/Xperts-Frontend/index.html",
+    "main.7bed1b01.css.map": "/Xperts-Frontend/static/css/main.7bed1b01.css.map",
+    "main.60f495c5.js.map": "/Xperts-Frontend/static/js/main.60f495c5.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7bed1b01.css",
+    "static/js/main.60f495c5.js"
+  ]
+}
