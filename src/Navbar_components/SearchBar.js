@@ -5,7 +5,7 @@ export default function SearchBar() {
     <div className="relative flex justify-between left-[20px]">
       <img
         className="w-[135px] h-[150%]"
-        src="/Xperts_Logo__1.png"
+        src="https://res.cloudinary.com/dus5jhwhc/image/upload/v1763025555/Xperts_Logo__1_ey70sd.png"
         alt="Logo"
       ></img>
       <div className="flex items-center justify-center">
