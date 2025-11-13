@@ -1,12 +1,12 @@
 import SearchBar from "./Navbar_components/SearchBar";
 import UserSpace from "./Navbar_components/UserSpace";
 
-export default function Navbar() {
+export default function Navbar({ isWritingPost }) {
   return (
-    <nav className="absolute h-[70px] w-full flex justify-between items-center">
+    <nav className="h-[70px] w-full flex justify-between items-center">
       <SearchBar />
       <div className="user-center--icons flex items-center">
-        <UserSpace />
+        <UserSpace isWritingPost={isWritingPost} />
       </div>
     </nav>
   );

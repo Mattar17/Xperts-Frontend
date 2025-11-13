@@ -1,9 +1,9 @@
 import { Bell, Pencil, CircleUser } from "lucide-react";
 
-export default function UserSpace() {
+export default function UserSpace({ isWritingPost }) {
   return (
     <>
-      <button>
+      <button onClick={isWritingPost}>
         <Pencil color="white" />
       </button>
       <button>

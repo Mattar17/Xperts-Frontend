@@ -41,7 +41,7 @@ export default function Posts() {
   };
 
   return (
-    <div className="relative top-[150px]">
+    <div className="relative mt-[40px]">
       {isLoading && fetchedPage.length ? (
         <MoonLoader className="mx-auto" color="#981316" />
       ) : (
