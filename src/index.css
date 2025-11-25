@@ -26,3 +26,25 @@ nav {
 .user-center--icons svg {
   margin: 10px 35px;
 }
+
+.form div {
+  margin-top: 20px;
+  margin-bottom: 15px;
+  padding: 10px;
+}
+
+select:not(:first-child) {
+  color: #000000;
+}
+
+.input {
+  border: 2px solid #c8c7c7;
+  border-radius: 5px;
+}
+
+.btn {
+  background-color: var(--primary-color);
+}
+.btn:hover {
+  background-color: #b01e21;
+}
