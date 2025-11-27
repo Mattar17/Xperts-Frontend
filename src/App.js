@@ -1,10 +1,8 @@
 import { useState } from "react";
 import "./index.css";
 import Navbar from "./Navbar";
-import Posts from "./Posts";
-import WritePost from "./WritePost";
-import Login from "./Login";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Posts from "./Posts_components/Posts";
+import WritePost from "./Posts_components/WritePost";
 
 function App() {
   const [isWritingPost, setIsWritingPost] = useState(false);

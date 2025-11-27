@@ -2,13 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100..900&display=swap");
+
 :root {
   --primary-color: #981316;
 }
 
 body {
   margin: 0;
-  font-family: "Inria Sans", sans-serif;
+  font-family: "Inria Sans", "Noto Sans Arabic", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #d9d9d9;
@@ -47,4 +49,8 @@ select:not(:first-child) {
 }
 .btn:hover {
   background-color: #b01e21;
+}
+
+.primary-text-color {
+  color: var(--primary-color);
 }
