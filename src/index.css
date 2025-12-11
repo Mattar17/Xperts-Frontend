@@ -26,7 +26,11 @@ nav {
 }
 
 .user-center--icons svg {
-  margin: 10px 35px;
+  margin-right: 90px;
+}
+
+.user-center--icons img {
+  margin-right: 90px;
 }
 
 .form div {
@@ -53,4 +57,8 @@ select:not(:first-child) {
 
 .primary-text-color {
   color: var(--primary-color);
+}
+
+.primary-bg-color {
+  background-color: var(--primary-color);
 }

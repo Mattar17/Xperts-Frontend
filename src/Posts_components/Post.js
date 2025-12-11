@@ -1,30 +1,55 @@
 import { CircleUserRound } from "lucide-react";
 
-export function Post({ postDetails }) {
-  const postDate = new Date(Date.parse(postDetails?.creationDate));
+export default function Post({ postDetails }) {
+  if (!postDetails) return null;
+
+  const postDate = new Date(postDetails.creationDate);
 
   return (
-    <div className="mx-auto w-[520px] h-[470px] bg-white mb-[40px] rounded-lg">
-      <div className="mx-6 h-full">
-        {/*user and Date*/}
-        <div className="flex justify-between items-center mb-3 pt-4">
-          {/*user*/}
-          <User userDetails={postDetails?.author} />
-          {/*date*/}
-          <div className="mt-3">
-            <h1 className="font-medium">
-              {postDate.toLocaleDateString("en-GB")}
-            </h1>
-            <h1 className="font-medium">
-              {postDate.toLocaleTimeString("en-GB")}
-            </h1>
+    <div className="mx-auto w-[520px] bg-white rounded-xl shadow-md mb-10 p-6">
+      {/* Header */}
+      <div className="flex flex-col">
+        <div className="ml-1 primary-bg-color text-white p-1 rounded-xl w-[160px] text-center">
+          {postDetails.category.charAt(0).toUpperCase() +
+            postDetails.category.slice(1)}
+        </div>
+        <div className="flex justify-between items-start mb-6">
+          <User userDetails={postDetails.author} />
+
+          <div className="text-right text-sm text-gray-500">
+            <p>{postDate.toLocaleDateString("en-GB")}</p>
+            <p>{postDate.toLocaleTimeString("en-GB")}</p>
           </div>
         </div>
+      </div>
 
-        <div className="mx-[10px] mt-10">
-          <h1 className="font-semibold text-xl">{postDetails?.title}</h1>
-          <p>{postDetails?.content}</p>
-        </div>
+      {/* Title + content */}
+      <div className="mt-4">
+        <h1 className="font-bold text-2xl mb-2">{postDetails.title}</h1>
+        <p className="text-gray-700 leading-relaxed">{postDetails.content}</p>
+      </div>
+
+      {/* Divider */}
+      <hr className="my-6 border-gray-300" />
+
+      {/* Comments */}
+      <div>
+        <h2 className="text-lg font-semibold mb-3">Comments</h2>
+
+        {postDetails.comments?.length > 0 ? (
+          <div className="space-y-3">
+            {postDetails.comments.map((c, i) => (
+              <div
+                key={i}
+                className="bg-gray-100 px-3 py-2 rounded-md text-gray-800"
+              >
+                {c.text}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500 italic">No comments yet.</p>
+        )}
       </div>
     </div>
   );
@@ -32,11 +57,18 @@ export function Post({ postDetails }) {
 
 function User({ userDetails }) {
   return (
-    <div className="flex justify-between items-center mt-3">
-      <CircleUserRound size={34} />
-      <a href="#" className="text-[17px] pl-2 pb-1 font-semibold text-gray-800">
-        {userDetails?.name}
-      </a>
+    <div className="flex items-center mt-3">
+      {userDetails.pfp_url ? (
+        <img
+          src={userDetails.pfp_url}
+          alt="User"
+          className="w-10 h-10 rounded-full object-cover"
+        />
+      ) : (
+        <CircleUserRound size={40} className="text-gray-600" />
+      )}
+
+      <p className="font-semibold text-gray-800 ml-3">{userDetails.name}</p>
     </div>
   );
 }

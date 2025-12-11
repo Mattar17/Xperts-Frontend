@@ -1,6 +1,7 @@
-import { useReducer, useState, useEffect } from "react";
+import { useReducer, useState } from "react";
 import Cookies from "js-cookie";
 import WritePostError from "./WritePostError";
+import { TEST_BASE_URL, DEV_BASE_URL } from "../Gobal";
 
 const InitialState = {
   title: "",
@@ -21,14 +22,17 @@ export default function WritePost({ closeWritingPost }) {
   };
 
   const handlePublishPost = function () {
-    if (!error) {
-      closeWritingPost();
-    }
+    // if (!error) {
+    //   setTimeout(() => {
+    //     closeWritingPost();
+    //     window.location.reload();
+    //   }, 2000);
+    // }
   };
 
   const handleFormSubmit = async function (e) {
     e.preventDefault();
-    fetch("https://xperts-api.vercel.app/api/posts/create-post", {
+    fetch(`${TEST_BASE_URL}/api/posts/create-post`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -132,6 +136,7 @@ export default function WritePost({ closeWritingPost }) {
 
           {/* Button */}
           <button
+            onClick={handlePublishPost}
             type="submit"
             className="btn w-full text-white font-semibold p-2 rounded-lg  transition"
           >

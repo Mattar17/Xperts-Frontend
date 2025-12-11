@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { BASE_URL } from "../Gobal";
+import { TEST_BASE_URL } from "../Gobal";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import MessageBox from "../MessageBox";
+import { useNavigate } from "react-router-dom";
 
 export default function WritePostError({ error, closeError }) {
   const [codeSent, setCodeSent] = useState(false);
@@ -9,9 +11,10 @@ export default function WritePostError({ error, closeError }) {
   const [emailVerified, setEmailVerified] = useState(false);
   const token = Cookies.get("token");
   const decodedToken = jwtDecode(token);
+  const navigate = useNavigate();
 
   const handleCodeRequest = function () {
-    fetch(`${BASE_URL}/api/auth/send-verification-code`, {
+    fetch(`${TEST_BASE_URL}/api/auth/send-verification-code`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -29,7 +32,7 @@ export default function WritePostError({ error, closeError }) {
   };
 
   const handleVerifyCode = function () {
-    fetch(`${BASE_URL}/api/auth/verify-email`, {
+    fetch(`${TEST_BASE_URL}/api/auth/verify-email`, {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",
@@ -41,6 +44,7 @@ export default function WritePostError({ error, closeError }) {
       .then((data) => {
         if (data.status === "success") {
           setEmailVerified(true);
+          navigate("/login");
         }
       });
   };
@@ -48,7 +52,7 @@ export default function WritePostError({ error, closeError }) {
   return (
     <div className="flex flex-col items-center mt-8">
       {emailVerified ? (
-        <div
+        <MessageBox
           className={`flex justify-between w-[520px] bg-white border shadow-md p-5 rounded-xl `}
         >
           <h1 className="text-green-600">Email Verified Successfully!</h1>
@@ -58,7 +62,7 @@ export default function WritePostError({ error, closeError }) {
           >
             &times;
           </button>
-        </div>
+        </MessageBox>
       ) : (
         <div className={`w-[520px] bg-white border shadow-md p-5 rounded-xl `}>
           <div className="flex justify-between items-start">

@@ -4,7 +4,7 @@ import { NavLink } from "react-router";
 
 export default function Navbar({ isWritingPost }) {
   return (
-    <nav className="h-[70px] px-[20px] w-full flex justify-between items-center">
+    <nav className="h-[70px] px-[50px] w-full flex justify-between items-center">
       <SearchBar />
       {document.cookie === "" ? (
         <NavLink

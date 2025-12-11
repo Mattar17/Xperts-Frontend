@@ -24,8 +24,6 @@ export default function Register() {
       return;
     }
 
-    setError("");
-
     fetch(`${TEST_BASE_URL}/api/auth/register`, {
       method: "POST",
       headers: {
@@ -37,6 +35,8 @@ export default function Register() {
       .then((data) => {
         if (data.status === "error") {
           setError(data.message);
+        } else {
+          setError("");
         }
       });
   };
