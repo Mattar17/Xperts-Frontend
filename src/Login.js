@@ -1,7 +1,8 @@
 import { useState } from "react";
 import Cookies from "js-cookie";
 import { NavLink, useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react"; // <-- Install lucide-react if not installed
+import { ArrowLeft } from "lucide-react";
+import { ClipLoader } from "react-spinners";
 
 export default function Login() {
   const [form, setForm] = useState({
@@ -9,6 +10,7 @@ export default function Login() {
     password: "",
   });
 
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const handleChange = (e) => {
@@ -19,6 +21,7 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsLoading(true);
     fetch("https://xperts-api.vercel.app/api/auth/login", {
       method: "POST",
       headers: { "Content-type": "application/json" },
@@ -28,6 +31,7 @@ export default function Login() {
       .then((data) => {
         if (data.status === "error") {
           setError(data.message);
+          setIsLoading(false);
         } else {
           Cookies.set("token", data.token, { expires: 7, secure: true });
           navigate("/");
@@ -87,14 +91,18 @@ export default function Login() {
           </div>
 
           {/* Error */}
-          {error && <p className="text-red-600 text-center text-sm">{error}</p>}
+          {error && <p className="text-red-800 text-center text-md">{error}</p>}
 
           {/* Submit */}
           <button
             type="submit"
-            className="w-full btn hover:bg-red-700 text-white p-3 rounded-lg font-semibold transition"
+            className="w-full btn hover:bg-red-700 text-white p-3 rounded-lg font-semibold"
           >
-            تسجيل الدخول
+            {isLoading ? (
+              <ClipLoader className="mx-auto" size={24} color="#FFFFFF" />
+            ) : (
+              <>تسجيل الدخول</>
+            )}
           </button>
         </form>
 
