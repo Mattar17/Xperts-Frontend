@@ -3,8 +3,7 @@ import { MoonLoader } from "react-spinners";
 import Post from "./Post";
 import { TEST_BASE_URL, DEV_BASE_URL } from "../Gobal";
 
-export default function Posts() {
-  const [Posts, setPosts] = useState([]);
+export default function Posts({ posts, setPosts }) {
   const [isLoading, setIsLoading] = useState(true);
   const [Page, setPage] = useState(1);
   const fetchedPage = useRef(new Set());
@@ -27,13 +26,14 @@ export default function Posts() {
           el?.scrollIntoView(true);
         }, 0);
 
+        console.log(combined);
         return combined;
       });
       setIsLoading(false);
     }
 
     fetchData();
-  }, [Page]);
+  }, [Page, posts]);
 
   const handleSetPage = function () {
     setPage((page) => page + 1);
@@ -44,7 +44,7 @@ export default function Posts() {
       {isLoading && fetchedPage.length ? (
         <MoonLoader className="mx-auto" color="#981316" />
       ) : (
-        Posts?.map((post, i) => (
+        posts?.map((post, i) => (
           <Post id={`post-${i}`} key={post._id} postDetails={post} />
         ))
       )}

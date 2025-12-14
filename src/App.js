@@ -6,6 +6,7 @@ import WritePost from "./Posts_components/WritePost";
 
 function App() {
   const [isWritingPost, setIsWritingPost] = useState(false);
+  const [posts, setPosts] = useState([]);
 
   const handleOpenWritingPost = () => {
     setIsWritingPost(true);
@@ -15,13 +16,21 @@ function App() {
     setIsWritingPost(false);
   };
 
+  const handleSetPosts = (newPost) => {
+    setPosts((current) => [newPost, ...current]);
+    setIsWritingPost(false);
+  };
+
   return (
     <div className="App">
       <Navbar isWritingPost={handleOpenWritingPost} />
       {isWritingPost ? (
-        <WritePost closeWritingPost={handleCloseWritingPost} />
+        <WritePost
+          setPosts={handleSetPosts}
+          closeWritingPost={handleCloseWritingPost}
+        />
       ) : null}
-      <Posts />
+      <Posts posts={posts} setPosts={setPosts} />
     </div>
   );
 }

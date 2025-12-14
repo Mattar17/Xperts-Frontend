@@ -13,7 +13,7 @@ const reducer = function (state, action) {
   return { ...state, ...action.payload };
 };
 
-export default function WritePost({ closeWritingPost }) {
+export default function WritePost({ closeWritingPost, setPosts }) {
   const [state, dispatch] = useReducer(reducer, InitialState);
   const [error, setError] = useState(null);
 
@@ -44,6 +44,8 @@ export default function WritePost({ closeWritingPost }) {
       .then((data) => {
         if (data.status === "error") {
           setError(data.message);
+        } else {
+          setPosts(data.data);
         }
       });
   };
