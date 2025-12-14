@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { TEST_BASE_URL } from "./Gobal";
 import { NavLink } from "react-router";
+import { ClipLoader } from "react-spinners";
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -10,6 +11,7 @@ export default function Register() {
     confirmPassword: "",
   });
 
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const handleChange = (e) => {
@@ -18,6 +20,7 @@ export default function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     if (form.password !== form.confirmPassword) {
       setError("Passwords do not match");
@@ -35,8 +38,10 @@ export default function Register() {
       .then((data) => {
         if (data.status === "error") {
           setError(data.message);
+          setIsLoading(false);
         } else {
           setError("");
+          setIsLoading(false);
         }
       });
   };
@@ -111,9 +116,16 @@ export default function Register() {
 
           <button
             type="submit"
-            className="w-full btn bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition font-semibold"
+            className={`w-full text-white py-2 rounded-lg ${
+              !isLoading && error === "" ? "bg-gray-500" : "btn"
+            } transition font-semibold`}
+            disabled={!isLoading && error === ""}
           >
-            Register
+            {isLoading ? (
+              <ClipLoader size={24} color="#FFFFFF" />
+            ) : (
+              <>Register</>
+            )}
           </button>
 
           {/* Success Box */}
