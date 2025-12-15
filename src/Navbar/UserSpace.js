@@ -1,7 +1,7 @@
 import { Bell, CircleUser, Pencil } from "lucide-react";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
-import PopUpComponent from "../PopUpComponent";
+import PopUpComponent from "../Helpers/PopUpComponent";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 

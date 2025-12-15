@@ -10,8 +10,8 @@ export default function Posts({ posts, setPosts }) {
   const api_url = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    setIsLoading(true);
     async function fetchData() {
+      setIsLoading(true);
       if (fetchedPage.current.has(Page)) return;
       fetchedPage.current.add(Page);
 
@@ -33,7 +33,7 @@ export default function Posts({ posts, setPosts }) {
     }
 
     fetchData();
-  }, [Page, posts]);
+  }, [Page]);
 
   const handleSetPage = function () {
     setPage((page) => page + 1);
@@ -41,7 +41,7 @@ export default function Posts({ posts, setPosts }) {
 
   return (
     <div className="relative mt-[40px]">
-      {isLoading && fetchedPage.length ? (
+      {isLoading ? (
         <MoonLoader className="mx-auto" color="#981316" />
       ) : (
         posts?.map((post, i) => (
@@ -49,7 +49,7 @@ export default function Posts({ posts, setPosts }) {
         ))
       )}
 
-      {isLoading ? (
+      {isLoading && Page > 1 ? (
         <MoonLoader className="mx-auto" color="#981316" />
       ) : (
         <button

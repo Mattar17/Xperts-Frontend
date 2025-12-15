@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
-import MessageBox from "../MessageBox";
+import MessageBox from "../Helpers/MessageBox";
 import { useNavigate } from "react-router-dom";
 
 export default function WritePostError({ error, closeError }) {
