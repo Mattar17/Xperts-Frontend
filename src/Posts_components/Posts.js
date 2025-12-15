@@ -14,7 +14,7 @@ export default function Posts({ posts, setPosts }) {
       if (fetchedPage.current.has(Page)) return;
       fetchedPage.current.add(Page);
 
-      const response = await fetch(`${DEV_BASE_URL}/api/posts?page=${Page}`);
+      const response = await fetch(`${TEST_BASE_URL}/api/posts?page=${Page}`);
       const { posts } = await response.json();
       if (!posts) return;
       setPosts((current) => {
@@ -26,7 +26,6 @@ export default function Posts({ posts, setPosts }) {
           el?.scrollIntoView(true);
         }, 0);
 
-        console.log(combined);
         return combined;
       });
       setIsLoading(false);
