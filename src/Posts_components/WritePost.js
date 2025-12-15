@@ -2,6 +2,7 @@ import { useReducer, useState } from "react";
 import Cookies from "js-cookie";
 import WritePostError from "./WritePostError";
 import { TEST_BASE_URL, DEV_BASE_URL } from "../Gobal";
+import { ClipLoader } from "react-spinners";
 
 const InitialState = {
   title: "",
@@ -15,23 +16,16 @@ const reducer = function (state, action) {
 
 export default function WritePost({ closeWritingPost, setPosts }) {
   const [state, dispatch] = useReducer(reducer, InitialState);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const closeError = function () {
     setError(null);
   };
 
-  const handlePublishPost = function () {
-    // if (!error) {
-    //   setTimeout(() => {
-    //     closeWritingPost();
-    //     window.location.reload();
-    //   }, 2000);
-    // }
-  };
-
   const handleFormSubmit = async function (e) {
     e.preventDefault();
+    setIsLoading(true);
     fetch(`${TEST_BASE_URL}/api/posts/create-post`, {
       method: "POST",
       headers: {
@@ -139,11 +133,14 @@ export default function WritePost({ closeWritingPost, setPosts }) {
 
           {/* Button */}
           <button
-            onClick={handlePublishPost}
             type="submit"
             className="btn w-full text-white font-semibold p-2 rounded-lg  transition"
           >
-            Publish Post
+            {isLoading ? (
+              <ClipLoader size={24} color="#FFFFFF" />
+            ) : (
+              <>Publish Post</>
+            )}
           </button>
         </form>
       </div>
