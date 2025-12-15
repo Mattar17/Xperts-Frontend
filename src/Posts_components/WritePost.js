@@ -45,7 +45,8 @@ export default function WritePost({ closeWritingPost, setPosts }) {
         if (data.status === "error") {
           setError(data.message);
         } else {
-          setPosts(data.data);
+          setPosts((current) => [data.data, ...current]);
+          closeWritingPost();
         }
       });
   };

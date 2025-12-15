@@ -16,17 +16,12 @@ function App() {
     setIsWritingPost(false);
   };
 
-  const handleSetPosts = (newPost) => {
-    setPosts((current) => [newPost, ...current]);
-    setIsWritingPost(false);
-  };
-
   return (
     <div className="App">
       <Navbar isWritingPost={handleOpenWritingPost} />
       {isWritingPost ? (
         <WritePost
-          setPosts={handleSetPosts}
+          setPosts={setPosts}
           closeWritingPost={handleCloseWritingPost}
         />
       ) : null}
