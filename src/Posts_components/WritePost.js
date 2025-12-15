@@ -1,7 +1,6 @@
 import { useReducer, useState } from "react";
 import Cookies from "js-cookie";
 import WritePostError from "./WritePostError";
-import { TEST_BASE_URL, DEV_BASE_URL } from "../Gobal";
 import { ClipLoader } from "react-spinners";
 
 const InitialState = {
@@ -19,6 +18,8 @@ export default function WritePost({ closeWritingPost, setPosts }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const api_url = process.env.REACT_APP_API_URL;
+
   const closeError = function () {
     setError(null);
   };
@@ -26,7 +27,7 @@ export default function WritePost({ closeWritingPost, setPosts }) {
   const handleFormSubmit = async function (e) {
     e.preventDefault();
     setIsLoading(true);
-    fetch(`${TEST_BASE_URL}/api/posts/create-post`, {
+    fetch(`${api_url}/api/posts/create-post`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",

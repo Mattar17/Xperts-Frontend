@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { TEST_BASE_URL } from "./Gobal";
 import { NavLink } from "react-router";
 import { ClipLoader } from "react-spinners";
 
@@ -10,6 +9,8 @@ export default function Register() {
     password: "",
     confirmPassword: "",
   });
+
+  const api_url = process.env.REACT_APP_API_URL;
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -27,7 +28,7 @@ export default function Register() {
       return;
     }
 
-    fetch(`${TEST_BASE_URL}/api/auth/register`, {
+    fetch(`${api_url}/api/auth/register`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { TEST_BASE_URL } from "../Gobal";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import MessageBox from "../MessageBox";
@@ -12,9 +11,10 @@ export default function WritePostError({ error, closeError }) {
   const token = Cookies.get("token");
   const decodedToken = jwtDecode(token);
   const navigate = useNavigate();
+  const api_url = process.env.REACT_APP_API_URL;
 
   const handleCodeRequest = function () {
-    fetch(`${TEST_BASE_URL}/api/auth/send-verification-code`, {
+    fetch(`${api_url}/api/auth/send-verification-code`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -32,7 +32,7 @@ export default function WritePostError({ error, closeError }) {
   };
 
   const handleVerifyCode = function () {
-    fetch(`${TEST_BASE_URL}/api/auth/verify-email`, {
+    fetch(`${api_url}/api/auth/verify-email`, {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",

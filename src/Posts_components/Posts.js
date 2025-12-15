@@ -1,12 +1,13 @@
 import { useEffect, useState, useRef } from "react";
 import { MoonLoader } from "react-spinners";
 import Post from "./Post";
-import { TEST_BASE_URL, DEV_BASE_URL } from "../Gobal";
 
 export default function Posts({ posts, setPosts }) {
   const [isLoading, setIsLoading] = useState(true);
   const [Page, setPage] = useState(1);
   const fetchedPage = useRef(new Set());
+
+  const api_url = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     setIsLoading(true);
@@ -14,7 +15,7 @@ export default function Posts({ posts, setPosts }) {
       if (fetchedPage.current.has(Page)) return;
       fetchedPage.current.add(Page);
 
-      const response = await fetch(`${TEST_BASE_URL}/api/posts?page=${Page}`);
+      const response = await fetch(`${api_url}/api/posts?page=${Page}`);
       const { posts } = await response.json();
       if (!posts) return;
       setPosts((current) => {
