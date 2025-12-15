@@ -11,7 +11,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <StrictMode>
-    <BrowserRouter basename="/Xperts-Frontend">
+    <BrowserRouter>
       <Routes>
         <Route path="/*" element={<App />}></Route>
         <Route path="/login" element={<Login />}></Route>
