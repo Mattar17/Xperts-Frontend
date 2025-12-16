@@ -1,8 +1,8 @@
 import { useState } from "react";
 import "./index.css";
-import Navbar from "./Navbar";
-import Posts from "./Posts_components/Posts";
-import WritePost from "./Posts_components/WritePost";
+import Navbar from "./Navbar/Navbar";
+import Posts from "./Posts/Posts";
+import WritePost from "./Posts/WritePost";
 
 function App() {
   const [isWritingPost, setIsWritingPost] = useState(false);

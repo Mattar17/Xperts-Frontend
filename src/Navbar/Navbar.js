@@ -1,5 +1,5 @@
-import SearchBar from "./Navbar_components/SearchBar";
-import UserSpace from "./Navbar_components/UserSpace";
+import SearchBar from "./SearchBar";
+import UserSpace from "./UserSpace";
 import { NavLink } from "react-router";
 
 export default function Navbar({ isWritingPost }) {

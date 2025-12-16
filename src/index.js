@@ -2,10 +2,10 @@ import React, { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
-import NotFound from "./NotFound";
-import Login from "./Login";
-import Register from "./Register";
-import Profile from "./Profile";
+import NotFound from "./Helpers/NotFound";
+import Login from "./Auth/Login";
+import Register from "./Auth/Register";
+import Profile from "./User/Profile";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
