@@ -20,20 +20,14 @@ export default function Posts({ posts, setPosts }) {
       if (!posts) return;
       setPosts((current) => {
         const combined = [...current, ...posts];
-        const firstIndex = current.length;
-
-        setTimeout(() => {
-          const el = document.getElementById(`post-${firstIndex}`);
-          el?.scrollIntoView(true);
-        }, 0);
-
+        console.log(typeof combined);
         return combined;
       });
       setIsLoading(false);
     }
 
     fetchData();
-  }, [Page]);
+  }, [Page, api_url]);
 
   const handleSetPage = function () {
     setPage((page) => page + 1);
