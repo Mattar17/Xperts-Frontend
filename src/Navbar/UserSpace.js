@@ -1,4 +1,4 @@
-import { Bell, CircleUser, Pencil } from "lucide-react";
+import { Bell, CircleUser, Pencil, Settings2 } from "lucide-react";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import PopUpComponent from "../Helpers/PopUpComponent";
@@ -27,6 +27,11 @@ export default function UserSpace({ isWritingPost }) {
 
   return (
     <>
+      {decodedToken.isAdmin ? (
+        <NavLink to="/dashboard">
+          <Settings2 color="white"></Settings2>
+        </NavLink>
+      ) : null}
       <button onClick={isWritingPost}>
         <Pencil color="white" />
       </button>
@@ -56,7 +61,7 @@ export default function UserSpace({ isWritingPost }) {
         {userClciked ? (
           <PopUpComponent>
             <button className="w-full text-left p-2 hover:bg-gray-100 rounded-lg">
-              <NavLink to="/profile">Profile</NavLink>
+              <NavLink to="/dashboard/profile">Profile</NavLink>
             </button>
             <button
               onClick={signOut}
