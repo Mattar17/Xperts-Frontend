@@ -22,7 +22,7 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
-    fetch("https://xperts-api.vercel.app/api/auth/login", {
+    fetch(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify(form),

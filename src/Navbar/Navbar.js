@@ -1,8 +1,12 @@
 import SearchBar from "./SearchBar";
 import UserSpace from "./UserSpace";
 import { NavLink } from "react-router";
+import { useEffect } from "react";
 
 export default function Navbar({ isWritingPost }) {
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify({ pfp_url: "" }));
+  }, []);
   return (
     <nav className="h-[70px] px-[50px] w-full flex justify-between items-center">
       <SearchBar />
