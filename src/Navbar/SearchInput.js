@@ -16,6 +16,7 @@ export default function SearchInput() {
 
   const handleOpenSearch = () => {
     setSearchOpen(!searchOpen);
+    setQuery("");
   };
 
   useEffect(() => {
@@ -49,13 +50,14 @@ export default function SearchInput() {
           />
         </button>
         {searchOpen && (
-          <div className="">
+          <div className="relative">
             <input
+              id="search_input_mobile"
               value={query}
               onChange={(e) => handleSetQuery(e)}
               type="text"
-              className=" relative left-[-14px]
-                          top-8  
+              className=" absolute left-[-14px]
+              top-4
                           text-center
                           w-[180px]
                           py-1
