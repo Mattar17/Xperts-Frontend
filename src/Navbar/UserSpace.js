@@ -1,13 +1,15 @@
-import { Bell, CircleUser, Pencil, Settings2 } from "lucide-react";
+import { Bell, CircleUser, Pencil, Settings2, Search } from "lucide-react";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import PopUpComponent from "../Helpers/PopUpComponent";
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function UserSpace({ isWritingPost }) {
+  const navigate = useNavigate();
   const token = Cookies.get("token");
   const decodedToken = jwtDecode(token);
+  const userInfo = useRef(null);
 
   const [userClciked, setUserClicked] = useState(false);
   const [notificationOpen, setNotificationOpne] = useState(false);
@@ -21,56 +23,123 @@ export default function UserSpace({ isWritingPost }) {
   };
 
   const signOut = () => {
+    navigate("/login");
     Cookies.remove("token");
     window.location.reload();
   };
 
+  useEffect(() => {
+    let ignore = true;
+    if (!ignore) return;
+    fetch(
+      `${process.env.REACT_APP_API_URL}/api/user/profile/${decodedToken._id}`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        localStorage.setItem("user", JSON.stringify(data.data));
+        userInfo.current = data.data;
+        console.log(userInfo.current);
+      });
+
+    return () => {
+      ignore = false;
+    };
+  }, []);
+
   return (
     <>
-      {decodedToken.isAdmin ? (
-        <NavLink to="/dashboard">
-          <Settings2 color="white"></Settings2>
-        </NavLink>
-      ) : null}
-      <button onClick={isWritingPost}>
-        <Pencil color="white" />
-      </button>
-      <div className="relative">
-        <button onClick={handleNotificationOpen}>
-          <Bell color={notificationOpen ? `#c2c2c2` : "white"} />
+      <div className="flex items-center gap-2 sm:gap-4">
+        {userInfo.current?.isAdmin && (
+          <NavLink
+            to="/dashboard"
+            className="p-2 rounded-full hover:bg-white/10 transition"
+          >
+            <Settings2 className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+          </NavLink>
+        )}
+
+        <button
+          onClick={isWritingPost}
+          className="p-2 rounded-full hover:bg-white/10 transition"
+        >
+          <Pencil className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
         </button>
-        {notificationOpen ? (
-          <PopUpComponent>
-            <h1>No Notificiations 😛</h1>
-          </PopUpComponent>
-        ) : null}
+
+        <div className="relative">
+          <button
+            onClick={handleNotificationOpen}
+            className="p-2 rounded-full hover:bg-white/10 transition"
+          >
+            <Bell
+              className={`w-5 h-5 sm:w-6 sm:h-6 ${
+                notificationOpen ? "text-gray-300" : "text-white"
+              }`}
+            />
+          </button>
+
+          {notificationOpen && (
+            <PopUpComponent>
+              <h1 className="text-sm sm:text-base p-2">No Notifications 😛</h1>
+            </PopUpComponent>
+          )}
+        </div>
       </div>
+
       <div className="relative">
-        <button onClick={handleUserClicked}>
-          {decodedToken.pfp_url !== "" ? (
+        <button
+          onClick={handleUserClicked}
+          className="p-1 rounded-full hover:bg-white/10 transition"
+        >
+          {userInfo.current?.pfp_url ? (
             <img
-              className="w-10 h-10 rounded-full object-cover"
-              src={decodedToken.pfp_url}
+              src={userInfo.current.pfp_url}
               alt="User Profile"
-              width="10px"
-            ></img>
+              className="
+          w-8 h-8
+          sm:w-10 sm:h-10
+          rounded-full object-cover
+        "
+            />
           ) : (
-            <CircleUser color={userClciked ? `#c2c2c2` : "white"} />
+            <CircleUser
+              className="w-6 h-6 sm:w-7 sm:h-7"
+              color={userClciked ? "#c2c2c2" : "white"}
+            />
           )}
         </button>
-        {userClciked ? (
+
+        {userClciked && (
           <PopUpComponent>
-            <button className="w-full text-left p-2 hover:bg-gray-100 rounded-lg">
-              <NavLink to="/dashboard/profile">Profile</NavLink>
-            </button>
-            <button
-              onClick={signOut}
-              className="w-full text-left p-2 hover:bg-gray-100 rounded-lg"
-            >
-              Logout
-            </button>
+            <div className="flex flex-col min-w-[160px]">
+              <NavLink
+                to="/dashboard/profile"
+                className="
+            px-3 py-2
+            text-sm sm:text-base
+            rounded-lg
+            hover:bg-gray-100
+            transition
+          "
+              >
+                Profile
+              </NavLink>
+
+              <button
+                onClick={signOut}
+                className="
+            text-left
+            px-3 py-2
+            text-sm sm:text-base
+            rounded-lg
+            hover:bg-gray-100
+            transition
+          "
+              >
+                Logout
+              </button>
+            </div>
           </PopUpComponent>
-        ) : null}
+        )}
       </div>
     </>
   );

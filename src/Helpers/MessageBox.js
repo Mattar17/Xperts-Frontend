@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function MessageBox({ children }) {
+export default function MessageBox({ children, xSize, ySize }) {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function MessageBox({ children }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.4 }}
-          className="relative flex items-center justify-between left-[30px] -translate-x-1/2 mt-6 bg-white text-gray-50 px-10 py-3 rounded-xl shadow-lg z-50"
+          className={`relative flex items-center justify-between left-[30px] -translate-x-1/2 mt-2 mb-2 bg-white px-${xSize} py-${ySize} rounded-xl shadow-lg z-50`}
         >
           {children}
         </motion.div>
