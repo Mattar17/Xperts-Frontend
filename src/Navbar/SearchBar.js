@@ -8,7 +8,7 @@ export default function SearchBar() {
         src="https://res.cloudinary.com/dus5jhwhc/image/upload/v1763025555/Xperts_Logo__1_ey70sd.png"
         alt="Logo"
       ></img>
-      <SearchInput />
+      <SearchInput className="search_input" />
     </div>
   );
 }
