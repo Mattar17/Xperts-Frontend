@@ -6,8 +6,7 @@ export default function Post({ postDetails }) {
   const postDate = new Date(postDetails.creationDate);
 
   return (
-    <div className="mx-auto w-[520px] bg-white rounded-xl shadow-md mb-10 p-6">
-      {/* Header */}
+    <div className="mx-auto md:w-[520px] w-[70%] bg-white rounded-xl shadow-md mb-10 p-6">
       <div className="flex flex-col">
         <div className="ml-1 primary-bg-color text-white p-1 rounded-xl w-[160px] text-center">
           {postDetails.category.charAt(0).toUpperCase() +

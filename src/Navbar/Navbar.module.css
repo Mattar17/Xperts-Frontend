@@ -1,0 +1,9 @@
+.search_input {
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .search_input {
+    display: none;
+  }
+}
