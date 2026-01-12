@@ -49,7 +49,7 @@ export default function WritePost({ closeWritingPost, setPosts }) {
   return (
     <>
       {error ? <WritePostError error={error} closeError={closeError} /> : null}
-      <div className="mx-auto mt-8 w-[520px] bg-white shadow-lg p-6 rounded-xl">
+      <div className="mx-auto my-6 md:w-[520px] w-[70%] bg-white rounded-xl shadow-md p-6">
         <div className="flex justify-end">
           <button
             onClick={closeWritingPost}
@@ -60,7 +60,6 @@ export default function WritePost({ closeWritingPost, setPosts }) {
         </div>
 
         <form className="space-y-6" onSubmit={(e) => handleFormSubmit(e)}>
-          {/* Category */}
           <div className="flex flex-col">
             <label
               htmlFor="category"
@@ -71,7 +70,7 @@ export default function WritePost({ closeWritingPost, setPosts }) {
 
             <select
               id="category"
-              className="border border-gray-300 rounded-lg p-2 text-gray-600 focus:ring-blue-500 focus:border-blue-500"
+              className="border border-gray-300 rounded-lg text-sm sm:text-base p-2 text-gray-600 focus:ring-blue-500 focus:border-blue-500"
               required
               defaultValue=""
               value={state.category}
@@ -88,7 +87,6 @@ export default function WritePost({ closeWritingPost, setPosts }) {
             </select>
           </div>
 
-          {/* Title */}
           <div className="flex flex-col">
             <label
               htmlFor="post-title"
