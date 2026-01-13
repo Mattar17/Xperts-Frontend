@@ -110,14 +110,16 @@ export default function UserSpace({ isWritingPost }) {
 
         {userClciked && (
           <PopUpComponent>
-            <div className="flex flex-col min-w-[160px]">
+            <div className="flex flex-col min-w-[125px]">
               <NavLink
                 to="/dashboard/profile"
                 className="
             px-3 py-2
             text-sm sm:text-base
             rounded-lg
-            hover:bg-gray-100
+            hover:translate-x-0.5
+            hover:text-red-900
+            hover:font-semibold
             transition
           "
               >
@@ -131,7 +133,9 @@ export default function UserSpace({ isWritingPost }) {
             px-3 py-2
             text-sm sm:text-base
             rounded-lg
-            hover:bg-gray-100
+            hover:translate-x-0.5
+            hover:text-red-900
+            hover:font-semibold
             transition
           "
               >
