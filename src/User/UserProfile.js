@@ -30,6 +30,33 @@ export default function UserProfile() {
     setConfirmed(!confirmed);
   };
 
+  const handleSaveChanges = () => {
+    fetch(`${process.env.REACT_APP_API_URL}/api/user/update_user`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authentication: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ name, bio }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status === "success") {
+          console.log(data);
+          let userInfo = JSON.parse(localStorage.getItem("user"));
+          userInfo = {
+            name: data.data.name,
+            bio: data.data.bio,
+          };
+          localStorage.setItem("user", JSON.stringify(userInfo));
+          setName(data.data.name);
+          setBio(data.data.bio);
+        }
+      });
+    setIsEditing(!isEditing);
+  };
+
   useEffect(() => {
     if (!file) return;
     const formData = new FormData();
@@ -123,12 +150,23 @@ export default function UserProfile() {
           )}
 
           <div className="mt-4">
-            <button
-              onClick={() => setIsEditing(!isEditing)}
-              className="text-sm font-medium text-[#981316] hover:underline"
-            >
-              {isEditing ? "Save" : "Edit Profile"}
-            </button>
+            {!isEditing && (
+              <button
+                onClick={() => setIsEditing(!isEditing)}
+                className="text-sm font-medium text-[#981316] hover:underline"
+              >
+                Edit Profile
+              </button>
+            )}
+
+            {isEditing && (
+              <button
+                onClick={handleSaveChanges}
+                className="py-[2px] px-[14px] mt-[3px] rounded-lg btn text-white"
+              >
+                Save Changes
+              </button>
+            )}
           </div>
         </div>
       </div>
