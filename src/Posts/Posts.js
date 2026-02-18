@@ -20,7 +20,13 @@ export default function Posts({ posts, setPosts }) {
       if (fetchedPage.current.has(Page)) return;
       fetchedPage.current.add(Page);
 
-      const response = await fetch(`${api_url}/api/posts?page=${Page}`);
+      const response = await fetch(`${api_url}/api/posts?page=${Page}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": process.env.REACT_APP_API_KEY,
+        },
+      });
       const { posts } = await response.json();
       if (!posts) return;
       setPosts((current) => {

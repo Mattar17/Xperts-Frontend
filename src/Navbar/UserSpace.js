@@ -9,7 +9,7 @@ export default function UserSpace({ isWritingPost }) {
   const navigate = useNavigate();
   const token = Cookies.get("token");
   const decodedToken = jwtDecode(token);
-  const userInfo = useRef(null);
+  let userInfo = null;
 
   const [userClciked, setUserClicked] = useState(false);
   const [notificationOpen, setNotificationOpne] = useState(false);
@@ -37,8 +37,8 @@ export default function UserSpace({ isWritingPost }) {
       .then((res) => res.json())
       .then((data) => {
         localStorage.setItem("user", JSON.stringify(data.data));
-        userInfo.current = data.data;
-        console.log(userInfo.current);
+        userInfo = data.data;
+        console.log(userInfo);
       });
 
     return () => {
@@ -48,7 +48,7 @@ export default function UserSpace({ isWritingPost }) {
 
   return (
     <>
-      {userInfo.current?.isAdmin ? (
+      {userInfo?.isAdmin ? (
         <NavLink to="/dashboard">
           <Settings2 color="white"></Settings2>
         </NavLink>
@@ -68,10 +68,10 @@ export default function UserSpace({ isWritingPost }) {
       </div>
       <div className="relative">
         <button onClick={handleUserClicked}>
-          {userInfo.current?.pfp_url !== "" ? (
+          {userInfo?.pfp_url !== "" ? (
             <img
               className="w-10 h-10 rounded-full object-cover"
-              src={userInfo.current?.pfp_url}
+              src={userInfo?.pfp_url}
               alt="User Profile"
               width="10px"
             ></img>
