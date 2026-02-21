@@ -18,7 +18,8 @@ export default function WritePostError({ error, closeError }) {
       method: "POST",
       headers: {
         "Content-type": "application/json",
-        Authentication: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
+        "x-api-key": process.env.REACT_APP_API_KEY,
       },
     })
       .then((res) => res.json())
@@ -36,7 +37,8 @@ export default function WritePostError({ error, closeError }) {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",
-        Authentication: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
+        "x-api-key": process.env.REACT_APP_API_KEY,
       },
       body: JSON.stringify({ code: verificationCode }),
     })

@@ -31,7 +31,8 @@ export default function WritePost({ closeWritingPost, setPosts }) {
       method: "POST",
       headers: {
         "Content-type": "application/json",
-        Authentication: `Bearer ${Cookies.get("token")}`,
+        Authorization: `Bearer ${Cookies.get("token")}`,
+        "x-api-key": process.env.REACT_APP_API_KEY,
       },
       body: JSON.stringify(state),
     })

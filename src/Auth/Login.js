@@ -24,7 +24,10 @@ export default function Login() {
     setIsLoading(true);
     fetch(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
       method: "POST",
-      headers: { "Content-type": "application/json" },
+      headers: {
+        "Content-type": "application/json",
+        "x-api-key": process.env.REACT_APP_API_KEY,
+      },
       body: JSON.stringify(form),
     })
       .then((res) => res.json())

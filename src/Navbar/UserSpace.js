@@ -33,6 +33,12 @@ export default function UserSpace({ isWritingPost }) {
     if (!ignore) return;
     fetch(
       `${process.env.REACT_APP_API_URL}/api/user/profile/${decodedToken._id}`,
+      {
+        headers: {
+          "Content-type": "application/json",
+          "x-api-key": process.env.REACT_APP_API_KEY,
+        },
+      },
     )
       .then((res) => res.json())
       .then((data) => {

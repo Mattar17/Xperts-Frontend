@@ -22,7 +22,13 @@ export default function SearchInput() {
   useEffect(() => {
     if (query === "") return;
     let flag = true;
-    fetch(`https://xperts-api.vercel.app/api/user?name=${query}`)
+    fetch(`https://xperts-api.vercel.app/api/user?name=${query}`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        "x-api-key": process.env.REACT_APP_API_KEY,
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         if (flag) {

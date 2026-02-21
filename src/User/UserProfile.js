@@ -35,7 +35,8 @@ export default function UserProfile() {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authentication: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
+        "x-api-key": process.env.REACT_APP_API_KEY,
       },
       body: JSON.stringify({ name, bio }),
     })
@@ -64,7 +65,8 @@ export default function UserProfile() {
     fetch(`${process.env.REACT_APP_API_URL}/api/user/set-profile-picture`, {
       method: "PATCH",
       headers: {
-        Authentication: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
+        "x-api-key": process.env.REACT_APP_API_KEY,
       },
       body: formData,
     })
