@@ -12,7 +12,6 @@ export default function Navbar({ isWritingPost }) {
       className="
     h-[56px] sm:h-[64px] lg:h-[70px]
     px-4 sm:px-6 lg:px-[50px]
-    w-screen
     flex justify-between items-center
   "
     >
