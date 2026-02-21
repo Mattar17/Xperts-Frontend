@@ -9,7 +9,7 @@ export default function UserSpace({ isWritingPost }) {
   const navigate = useNavigate();
   const token = Cookies.get("token");
   const decodedToken = jwtDecode(token);
-  let userInfo = null;
+  const userInfo = useRef(null);
 
   const [userClciked, setUserClicked] = useState(false);
   const [notificationOpen, setNotificationOpne] = useState(false);
@@ -43,8 +43,8 @@ export default function UserSpace({ isWritingPost }) {
       .then((res) => res.json())
       .then((data) => {
         localStorage.setItem("user", JSON.stringify(data.data));
-        userInfo = data.data;
-        console.log(userInfo);
+        userInfo.current = data.data;
+        console.log(userInfo.current);
       });
 
     return () => {
@@ -54,7 +54,7 @@ export default function UserSpace({ isWritingPost }) {
 
   return (
     <>
-      {userInfo?.isAdmin ? (
+      {userInfo.current?.isAdmin ? (
         <NavLink to="/dashboard">
           <Settings2 color="white"></Settings2>
         </NavLink>
@@ -63,36 +63,30 @@ export default function UserSpace({ isWritingPost }) {
         <Pencil color="white" />
       </button>
       <div className="relative">
-        <button onClick={handleNotificationOpen}>
-          <Bell color={notificationOpen ? `#c2c2c2` : "white"} />
+        <button
+          onClick={handleNotificationOpen}
+          className="p-2 rounded-full hover:bg-white/10 transition"
+        >
+          <Bell
+            className={`w-5 h-5 sm:w-6 sm:h-6 ${
+              notificationOpen ? "text-gray-300" : "text-white"
+            }`}
+          />
         </button>
 
-        <div className="relative">
-          <button
-            onClick={handleNotificationOpen}
-            className="p-2 rounded-full hover:bg-white/10 transition"
-          >
-            <Bell
-              className={`w-5 h-5 sm:w-6 sm:h-6 ${
-                notificationOpen ? "text-gray-300" : "text-white"
-              }`}
-            />
-          </button>
-
-          {notificationOpen && (
-            <PopUpComponent>
-              <h1 className="text-sm sm:text-base p-2">No Notifications 😛</h1>
-            </PopUpComponent>
-          )}
-        </div>
+        {notificationOpen && (
+          <PopUpComponent>
+            <h1 className="text-sm sm:text-base p-2">No Notifications 😛</h1>
+          </PopUpComponent>
+        )}
       </div>
 
       <div className="relative">
         <button onClick={handleUserClicked}>
-          {userInfo?.pfp_url !== "" ? (
+          {userInfo.current?.pfp_url !== "" ? (
             <img
               className="w-10 h-10 rounded-full object-cover"
-              src={userInfo?.pfp_url}
+              src={userInfo.current?.pfp_url}
               alt="User Profile"
             />
           ) : (

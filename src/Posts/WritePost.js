@@ -27,7 +27,7 @@ export default function WritePost({ closeWritingPost, setPosts }) {
   const handleFormSubmit = async function (e) {
     e.preventDefault();
     setIsLoading(true);
-    fetch(`${api_url}/api/posts/create-post`, {
+    fetch(`${api_url}/api/posts`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -38,6 +38,7 @@ export default function WritePost({ closeWritingPost, setPosts }) {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         if (data.status === "error") {
           setError(data.message);
         } else {
