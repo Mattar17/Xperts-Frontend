@@ -40,14 +40,12 @@
 }
 
 .navItem:hover {
-  background-color: #f3f4f6;
   background-color: #f9fafb;
 }
 
 .navItemActive {
   color: #981316;
   font-weight: 600;
-  background-color: #fff1f2;
   background-color: transparent;
 }
 
@@ -61,7 +59,6 @@
   top: 50%;
   transform: translateY(-50%);
   width: 4px;
-  height: 22px;
   height: 24px;
   background-color: #981316;
   border-top-right-radius: 4px;
