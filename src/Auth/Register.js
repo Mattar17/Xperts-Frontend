@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router";
 import { ClipLoader } from "react-spinners";
+import { register } from "../api/auth";
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -10,8 +11,6 @@ export default function Register() {
     confirmPassword: "",
   });
 
-  const api_url = process.env.REACT_APP_API_URL;
-
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -19,33 +18,24 @@ export default function Register() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
     if (form.password !== form.confirmPassword) {
       setError("Passwords do not match");
+      setIsLoading(false);
       return;
     }
 
-    fetch(`${api_url}/api/auth/register`, {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-        "x-api-key": process.env.REACT_APP_API_KEY,
-      },
-      body: JSON.stringify(form),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === "error") {
-          setError(data.message);
-          setIsLoading(false);
-        } else {
-          setError("");
-          setIsLoading(false);
-        }
-      });
+    const data = await register(form);
+    if (data.status === "error") {
+      setError(data.message);
+      setIsLoading(false);
+    } else {
+      setError("");
+      setIsLoading(false);
+    }
   };
 
   return (

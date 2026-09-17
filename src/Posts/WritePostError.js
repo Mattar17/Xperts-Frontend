@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import MessageBox from "../Helpers/MessageBox";
 import { useNavigate } from "react-router-dom";
+import { sendVerificationCode, verifyEmail } from "../api/auth";
 
 export default function WritePostError({ error, closeError }) {
   const [codeSent, setCodeSent] = useState(false);
@@ -11,21 +12,11 @@ export default function WritePostError({ error, closeError }) {
   const token = Cookies.get("token");
   const decodedToken = jwtDecode(token);
   const navigate = useNavigate();
-  const api_url = process.env.REACT_APP_API_URL;
 
   const handleCodeRequest = function () {
-    fetch(`${api_url}/api/auth/send-verification-code`, {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${token}`,
-        "x-api-key": process.env.REACT_APP_API_KEY,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setCodeSent(true);
-      });
+    sendVerificationCode().then((data) => {
+      setCodeSent(true);
+    });
   };
 
   const handleVerificationCodeChange = function (e) {
@@ -33,22 +24,12 @@ export default function WritePostError({ error, closeError }) {
   };
 
   const handleVerifyCode = function () {
-    fetch(`${api_url}/api/auth/verify-email`, {
-      method: "PATCH",
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${token}`,
-        "x-api-key": process.env.REACT_APP_API_KEY,
-      },
-      body: JSON.stringify({ code: verificationCode }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === "success") {
-          setEmailVerified(true);
-          navigate("/login");
-        }
-      });
+    verifyEmail(verificationCode).then((data) => {
+      if (data.status === "success") {
+        setEmailVerified(true);
+        navigate("/login");
+      }
+    });
   };
 
   return (

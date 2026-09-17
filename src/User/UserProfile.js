@@ -1,21 +1,32 @@
 import { useState, useEffect, useRef } from "react";
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
 import MessageBox from "../Helpers/MessageBox";
+import { useUserStore } from "../store";
 
 export default function UserProfile() {
-  const token = Cookies.get("token");
-  const userInfo = JSON.parse(localStorage.getItem("user"));
-
-  let imageUrl = userInfo.pfp_url;
+  const { user, fetchUserProfile, updateProfile, uploadProfilePicture } = useUserStore();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState(userInfo.name);
-  const [bio, setBio] = useState(userInfo.bio);
+  const [name, setName] = useState(user?.name || "");
+  const [bio, setBio] = useState(user?.bio || "");
   const [file, setFile] = useState(null);
   const [confirmed, setConfirmed] = useState(false);
   const [isChanged, setIsChanged] = useState(false);
   const message = useRef("");
+
+  useEffect(() => {
+    if (!user) {
+      fetchUserProfile();
+    }
+  }, [user, fetchUserProfile]);
+
+  useEffect(() => {
+    if (user) {
+      setName(user.name || "");
+      setBio(user.bio || "");
+    }
+  }, [user]);
+
+  const imageUrl = user?.pfp_url;
 
   const handleInputFileChange = (event) => {
     const profilePic = document.getElementById("profile-pic");
@@ -30,62 +41,26 @@ export default function UserProfile() {
     setConfirmed(!confirmed);
   };
 
-  const handleSaveChanges = () => {
-    fetch(`${process.env.REACT_APP_API_URL}/api/user/update_user`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-        "x-api-key": process.env.REACT_APP_API_KEY,
-      },
-      body: JSON.stringify({ name, bio }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        if (data.status === "success") {
-          console.log(data);
-          let userInfo = JSON.parse(localStorage.getItem("user"));
-          userInfo = {
-            name: data.data.name,
-            bio: data.data.bio,
-          };
-          localStorage.setItem("user", JSON.stringify(userInfo));
-          setName(data.data.name);
-          setBio(data.data.bio);
-        }
-      });
-    setIsEditing(!isEditing);
+  const handleSaveChanges = async () => {
+    await updateProfile({ name, bio });
+    setIsEditing(false);
   };
 
   useEffect(() => {
     if (!file) return;
-    const formData = new FormData();
-    formData.append("picture", file);
-    fetch(`${process.env.REACT_APP_API_URL}/api/user/set-profile-picture`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "x-api-key": process.env.REACT_APP_API_KEY,
-      },
-      body: formData,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === "success") {
-          const user = JSON.parse(localStorage.getItem("user"));
-          user.pfp_url = data.data;
-          localStorage.setItem("user", JSON.stringify(user));
-          setIsChanged(true);
-          message.current = "Picture Uploaded Successfully!!";
-        } else {
-          message.current = "Something went wrong, Please try again!!";
-        }
-      });
-    setTimeout(() => {
+    uploadProfilePicture(file).then((res) => {
+      if (res?.status === "success") {
+        setIsChanged(true);
+        message.current = "Picture Uploaded Successfully!!";
+      } else {
+        message.current = res?.message || "Something went wrong, Please try again!!";
+      }
+    });
+    const timer = setTimeout(() => {
       setIsChanged(false);
     }, 5000);
-  }, [confirmed]);
+    return () => clearTimeout(timer);
+  }, [confirmed, file, uploadProfilePicture]);
 
   return (
     <div className="w-full max-w-[40rem] rounded-2xl bg-white p-8">

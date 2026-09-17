@@ -1,103 +1,102 @@
-import { Bell, CircleUser, Pencil, Settings2, Search } from "lucide-react";
-import { jwtDecode } from "jwt-decode";
-import Cookies from "js-cookie";
+import { Bell, CircleUser, Pencil, Settings2 } from "lucide-react";
 import PopUpComponent from "../Helpers/PopUpComponent";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useUserStore } from "../store";
 
 export default function UserSpace({ isWritingPost }) {
   const navigate = useNavigate();
-  const token = Cookies.get("token");
-  const decodedToken = jwtDecode(token);
-  const userInfo = useRef(null);
+  const { user, fetchUserProfile, logout } = useUserStore();
 
-  const [userClciked, setUserClicked] = useState(false);
-  const [notificationOpen, setNotificationOpne] = useState(false);
+  const [userClicked, setUserClicked] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
 
   const handleNotificationOpen = () => {
-    setNotificationOpne(!notificationOpen);
+    setNotificationOpen(!notificationOpen);
   };
 
   const handleUserClicked = () => {
-    setUserClicked(!userClciked);
+    setUserClicked(!userClicked);
   };
 
   const signOut = () => {
+    logout();
     navigate("/login");
-    Cookies.remove("token");
-    window.location.reload();
   };
 
   useEffect(() => {
-    let ignore = true;
-    if (!ignore) return;
-    fetch(
-      `${process.env.REACT_APP_API_URL}/api/user/profile/${decodedToken._id}`,
-      {
-        headers: {
-          "Content-type": "application/json",
-          "x-api-key": process.env.REACT_APP_API_KEY,
-        },
-      },
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        localStorage.setItem("user", JSON.stringify(data.data));
-        userInfo.current = data.data;
-        console.log(userInfo.current);
-      });
+    fetchUserProfile();
+  }, [fetchUserProfile]);
 
-    return () => {
-      ignore = false;
-    };
-  }, []);
+  const avatarUrl =
+    user?.pfp_url ||
+    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80";
 
   return (
     <>
-      {userInfo.current?.isAdmin ? (
-        <NavLink to="/dashboard">
-          <Settings2 color="white"></Settings2>
+      {user?.isAdmin ? (
+        <NavLink to="/dashboard" title="Admin Dashboard">
+          <Settings2 color="white" />
         </NavLink>
       ) : null}
-      <button onClick={isWritingPost}>
-        <Pencil color="white" />
+
+      <button
+        type="button"
+        onClick={isWritingPost}
+        className="p-1.5 rounded-full hover:bg-white/10 transition"
+        title="Write a post"
+      >
+        <Pencil color="white" size={20} />
       </button>
+
+      {/* Notifications with blue badge */}
       <div className="relative">
         <button
+          type="button"
           onClick={handleNotificationOpen}
-          className="p-2 rounded-full hover:bg-white/10 transition"
+          className="p-1.5 rounded-full hover:bg-white/10 transition relative flex items-center justify-center"
+          title="Notifications"
         >
           <Bell
-            className={`w-5 h-5 sm:w-6 sm:h-6 ${
-              notificationOpen ? "text-gray-300" : "text-white"
-            }`}
+            size={22}
+            className={notificationOpen ? "text-gray-300" : "text-white"}
           />
+          <span className="absolute top-0 right-0 w-4 h-4 bg-[#3b82f6] text-white text-[10px] font-bold rounded-full flex items-center justify-center pointer-events-none">
+            3
+          </span>
         </button>
 
         {notificationOpen && (
           <PopUpComponent>
-            <h1 className="text-sm sm:text-base p-2">No Notifications 😛</h1>
+            <h1 className="text-sm sm:text-base p-2">No Notifications</h1>
           </PopUpComponent>
         )}
       </div>
 
+      {/* User Avatar with green online dot */}
       <div className="relative">
-        <button onClick={handleUserClicked}>
-          {userInfo.current?.pfp_url !== "" ? (
+        <button
+          type="button"
+          onClick={handleUserClicked}
+          className="relative flex items-center justify-center"
+        >
+          {avatarUrl ? (
             <img
-              className="w-10 h-10 rounded-full object-cover"
-              src={userInfo.current?.pfp_url}
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-white/20"
+              src={avatarUrl}
               alt="User Profile"
             />
           ) : (
             <CircleUser
-              className="w-6 h-6 sm:w-7 sm:h-7"
-              color={userClciked ? "#c2c2c2" : "white"}
+              className="w-7 h-7 sm:w-8 sm:h-8"
+              color={userClicked ? "#c2c2c2" : "white"}
             />
           )}
+          {/* Green online badge */}
+          <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-[#981316]"></span>
         </button>
 
-        {userClciked && (
+        {userClicked && (
           <PopUpComponent>
             <div className="flex flex-col min-w-[125px]">
               <NavLink

@@ -3,6 +3,8 @@ import Cookies from "js-cookie";
 import { NavLink, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { ClipLoader } from "react-spinners";
+import { login } from "../api/auth";
+import { useUserStore } from "../store";
 
 export default function Login() {
   const [form, setForm] = useState({
@@ -12,6 +14,7 @@ export default function Login() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { fetchUserProfile } = useUserStore();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,27 +22,18 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    fetch(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-        "x-api-key": process.env.REACT_APP_API_KEY,
-      },
-      body: JSON.stringify(form),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === "error") {
-          setError(data.message);
-          setIsLoading(false);
-        } else {
-          Cookies.set("token", data.token, { expires: 7, secure: true });
-          navigate("/");
-        }
-      });
+    const data = await login(form);
+    if (data.status === "error") {
+      setError(data.message);
+      setIsLoading(false);
+    } else {
+      Cookies.set("token", data.token, { expires: 7, secure: true });
+      await fetchUserProfile();
+      navigate("/");
+    }
   };
 
   return (

@@ -1,73 +1,107 @@
-import { CircleUserRound } from "lucide-react";
+import React, { useState } from "react";
+import { ThumbsUp, MessageSquare, CircleUserRound } from "lucide-react";
+import styles from "./Post.module.css";
 
-export default function Post({ postDetails }) {
+export default function Post({ postDetails, index = 0, id }) {
+  // Hardcoded values for likes & comments as requested
+  const defaultLikes = index === 0 ? 15 : index === 1 ? 42 : 28;
+  const defaultComments = index === 0 ? 4 : index === 1 ? 8 : 6;
+
+  const [likes, setLikes] = useState(defaultLikes);
+  const [hasLiked, setHasLiked] = useState(false);
+
   if (!postDetails) return null;
 
-  const postDate = new Date(postDetails.creationDate);
+  const handleLike = () => {
+    if (hasLiked) {
+      setLikes((prev) => prev - 1);
+      setHasLiked(false);
+    } else {
+      setLikes((prev) => prev + 1);
+      setHasLiked(true);
+    }
+  };
+
+  // Format date and time
+  const postDate = postDetails.creationDate
+    ? new Date(postDetails.creationDate)
+    : new Date();
+
+  const formattedDate = !isNaN(postDate.getTime())
+    ? postDate.toLocaleDateString("en-GB")
+    : "17/09/2026";
+  const formattedTime = !isNaN(postDate.getTime())
+    ? postDate.toLocaleTimeString("en-GB")
+    : "14:59:25";
+
+  const category = postDetails.category
+    ? postDetails.category.charAt(0).toUpperCase() + postDetails.category.slice(1)
+    : "Engineering";
+
+  const authorName = postDetails.author?.name || "Elara Vance";
+  const authorHandle = postDetails.author?.username
+    ? `@${postDetails.author.username}`
+    : `@${authorName.replace(/\s+/g, "")}`;
 
   return (
-    <div className="mx-auto md:w-[520px] w-[70%] bg-white rounded-xl shadow-md mb-10 p-6">
-      <div className="flex flex-col">
-        <div className="ml-1 primary-bg-color text-white p-1 rounded-xl w-[160px] text-center">
-          {postDetails.category.charAt(0).toUpperCase() +
-            postDetails.category.slice(1)}
-        </div>
-        <div className="flex justify-between items-start mb-6">
-          <User userDetails={postDetails.author} />
-
-          <div className="text-right text-sm text-gray-500">
-            <p>{postDate.toLocaleDateString("en-GB")}</p>
-            <p>{postDate.toLocaleTimeString("en-GB")}</p>
-          </div>
+    <article id={id} className={styles.card}>
+      {/* Header: Category Badge & Stacked Date/Time */}
+      <div className={styles.headerRow}>
+        <div className={styles.categoryBadge}>{category}</div>
+        <div className={styles.timestamp}>
+          <div>{formattedDate}</div>
+          <div>{formattedTime}</div>
         </div>
       </div>
 
-      {/* Title + content */}
-      <div className="mt-4">
-        <h1 className="font-bold text-2xl mb-2">{postDetails.title}</h1>
-        <p className="text-gray-700 leading-relaxed">{postDetails.content}</p>
-      </div>
-
-      {/* Divider */}
-      <hr className="my-6 border-gray-300" />
-
-      {/* Comments */}
-      <div>
-        <h2 className="text-lg font-semibold mb-3">Comments</h2>
-
-        {postDetails.comments?.length > 0 ? (
-          <div className="space-y-3">
-            {postDetails.comments.map((c, i) => (
-              <div
-                key={i}
-                className="bg-gray-100 px-3 py-2 rounded-md text-gray-800"
-              >
-                {c.text}
-              </div>
-            ))}
-          </div>
+      {/* Author Section */}
+      <div className={styles.authorRow}>
+        {postDetails.author?.pfp_url ? (
+          <img
+            src={postDetails.author.pfp_url}
+            alt={authorName}
+            className={styles.authorAvatar}
+            onError={(e) => {
+              e.target.style.display = "none";
+            }}
+          />
         ) : (
-          <p className="text-gray-500 italic">No comments yet.</p>
+          <div className={styles.authorPlaceholder}>
+            <CircleUserRound size={40} className="text-gray-500" />
+          </div>
         )}
+
+        <div className={styles.authorDetails}>
+          <h4 className={styles.authorName}>{authorName}</h4>
+          <p className={styles.authorHandle}>{authorHandle}</p>
+        </div>
       </div>
-    </div>
-  );
-}
 
-function User({ userDetails }) {
-  return (
-    <div className="flex items-center mt-3">
-      {userDetails.pfp_url ? (
-        <img
-          src={userDetails.pfp_url}
-          alt="User"
-          className="w-10 h-10 rounded-full object-cover"
-        />
-      ) : (
-        <CircleUserRound size={40} className="text-gray-600" />
-      )}
+      {/* Post Content */}
+      <div className={styles.contentArea}>
+        <h2 className={styles.title}>{postDetails.title}</h2>
+        <p className={styles.body}>{postDetails.content}</p>
+      </div>
 
-      <p className="font-semibold text-gray-800 ml-3">{userDetails.name}</p>
-    </div>
+      {/* Footer: Likes & Comments */}
+      <div className={styles.footer}>
+        <button
+          type="button"
+          className={styles.actionItem}
+          onClick={handleLike}
+          style={{ color: hasLiked ? "#981316" : undefined }}
+        >
+          <ThumbsUp className={styles.actionIcon} />
+          <span>Likes ({likes})</span>
+        </button>
+
+        <span className={styles.separator}>|</span>
+
+        <div className={styles.actionItem}>
+          <MessageSquare className={styles.actionIcon} />
+          <span>Comments ({defaultComments})</span>
+        </div>
+      </div>
+    </article>
   );
 }

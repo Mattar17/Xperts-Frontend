@@ -1,7 +1,7 @@
 import { useReducer, useState } from "react";
-import Cookies from "js-cookie";
 import WritePostError from "./WritePostError";
 import { ClipLoader } from "react-spinners";
+import { createPost } from "../api/posts";
 
 const InitialState = {
   title: "",
@@ -18,8 +18,6 @@ export default function WritePost({ closeWritingPost, setPosts }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const api_url = process.env.REACT_APP_API_URL;
-
   const closeError = function () {
     setError(null);
   };
@@ -27,31 +25,21 @@ export default function WritePost({ closeWritingPost, setPosts }) {
   const handleFormSubmit = async function (e) {
     e.preventDefault();
     setIsLoading(true);
-    fetch(`${api_url}/api/posts`, {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${Cookies.get("token")}`,
-        "x-api-key": process.env.REACT_APP_API_KEY,
-      },
-      body: JSON.stringify(state),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        if (data.status === "error") {
-          setError(data.message);
-        } else {
-          setPosts((current) => [data.data, ...current]);
-          closeWritingPost();
-        }
-      });
+    const data = await createPost(state);
+    console.log(data);
+    if (data.status === "error") {
+      setError(data.message);
+    } else {
+      setPosts((current) => [data.data, ...current]);
+      closeWritingPost();
+    }
+    setIsLoading(false);
   };
 
   return (
     <>
       {error ? <WritePostError error={error} closeError={closeError} /> : null}
-      <div className="mx-auto my-6 md:w-[520px] w-[70%] bg-white rounded-xl shadow-md p-6">
+      <div className="w-full bg-white rounded-2xl shadow-sm mb-6 p-6">
         <div className="flex justify-end">
           <button
             onClick={closeWritingPost}

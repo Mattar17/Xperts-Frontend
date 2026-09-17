@@ -1,116 +1,63 @@
 import { Search } from "lucide-react";
 import { useState, useEffect } from "react";
 import SearchResult from "./SearchResult";
-import styles from "./Navbar.module.css";
+import { searchUsers } from "../api/user";
 
 export default function SearchInput() {
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState(null);
-  const [searchOpen, setSearchOpen] = useState(false);
-
-  //https://xperts-api.vercel.app/api/user?name=${query}
 
   const handleSetQuery = (e) => {
     setQuery(e.target.value);
   };
 
-  const handleOpenSearch = () => {
-    setSearchOpen(!searchOpen);
-    setQuery("");
-  };
-
   useEffect(() => {
-    if (query === "") return;
+    if (query === "") {
+      setSearchResults(null);
+      return;
+    }
     let flag = true;
-    fetch(`https://xperts-api.vercel.app/api/user?name=${query}`, {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json",
-        "x-api-key": process.env.REACT_APP_API_KEY,
-      },
-    })
-      .then((res) => res.json())
+    searchUsers(query)
       .then((data) => {
         if (flag) {
           setSearchResults(data.data);
-          console.log(data);
         }
       })
       .catch((err) => console.log(err));
 
-    setTimeout(() => {
-      console.log(searchResults);
-    }, 0);
     return () => {
       flag = false;
     };
   }, [query]);
 
   return (
-    <div className="flex flex-col gap-1 pl-2 sm:pl-[18px] relative">
-      <div className="flex items-center justify-center">
-        <button onClick={handleOpenSearch} className={`${styles.search}`}>
-          <Search
-            className="z-50 relative left-1 text-white md:text-black"
-            size={18}
-          />
-        </button>
-        {searchOpen && (
-          <div className="relative">
-            <input
-              id="search_input_mobile"
-              value={query}
-              onChange={(e) => handleSetQuery(e)}
-              type="text"
-              className=" absolute left-[-14px]
-              top-4
-                          text-center
-                          w-[180px]
-                          py-1
-                          focus:outline-none
-                          rounded-lg
-                          bg-slate-100
-                          placeholder:text-gray-400
-                          placeholder:text-xs
-                          placeholder:italic"
-            />
-          </div>
-        )}
-
+    <div className="flex flex-col gap-1 pl-2 sm:pl-4 relative">
+      <div className="flex items-center bg-white rounded-xl px-3 py-1.5 gap-2 shadow-sm w-[170px] sm:w-[220px]">
+        <Search size={16} className="text-gray-400 shrink-0" />
         <input
           value={query}
-          onChange={(e) => handleSetQuery(e)}
+          onChange={handleSetQuery}
           type="text"
           placeholder="Search something"
-          className={`
-        ${styles.search_input}
-        relative left-[-14px]
-        text-center
-        w-[180px]
-        py-1
-        focus:outline-none
-        rounded-lg
-        bg-slate-100
-        placeholder:text-gray-400
-        placeholder:text-xs
-        placeholder:italic
-      `}
+          className="bg-transparent outline-none text-xs sm:text-sm text-gray-800 placeholder:text-gray-400 placeholder:italic w-full"
         />
       </div>
 
-      {!searchResults || query === "" ? null : (
+      {searchResults && query !== "" && (
         <div
           className="
-        bg-slate-100
+        bg-white
         w-[180px] sm:w-[220px] md:w-[250px]
         absolute
-        top-[65px] sm:top-[50px]
+        top-[42px]
         z-50
         rounded-lg
+        shadow-lg
         p-1
+        border border-gray-100
       "
         >
-          {searchResults?.map((r) => (
+          {searchResults.map((r) => (
             <SearchResult key={r._id} result={r} />
           ))}
         </div>
