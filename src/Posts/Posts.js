@@ -61,6 +61,23 @@ export default function Posts({ posts, setPosts }) {
     setPage((p) => p + 1);
   };
 
+  const handlePostUpdated = (updatedPost) => {
+    setPosts((current) =>
+      current.map((p) =>
+        (p._id && updatedPost._id && p._id === updatedPost._id) ||
+        (p.id && updatedPost.id && p.id === updatedPost.id)
+          ? { ...p, ...updatedPost }
+          : p
+      )
+    );
+  };
+
+  const handlePostDeleted = (deletedPostId) => {
+    setPosts((current) =>
+      current.filter((p) => (p._id || p.id) !== deletedPostId)
+    );
+  };
+
   return (
     <div className="w-full">
       {/* Initial load skeletons */}
@@ -79,6 +96,8 @@ export default function Posts({ posts, setPosts }) {
           key={post._id || i}
           postDetails={post}
           index={i}
+          onPostUpdated={handlePostUpdated}
+          onPostDeleted={handlePostDeleted}
         />
       ))}
 
