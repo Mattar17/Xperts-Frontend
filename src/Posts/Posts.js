@@ -9,8 +9,8 @@ const fallbackPosts = [
     category: "Engineering",
     creationDate: "2026-09-17T14:59:25",
     author: {
-      name: "Elara Vance",
-      username: "ElaraVance",
+      name: "User",
+      username: "Xperts_user",
       pfp_url:
         "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&h=120&q=80",
     },

@@ -45,7 +45,7 @@ export default function Post({ postDetails, index = 0, id }) {
     ? postDetails.category.charAt(0).toUpperCase() + postDetails.category.slice(1)
     : "Engineering";
 
-  const authorName = postDetails.author?.name || "Elara Vance";
+  const authorName = postDetails.author?.name || "Author";
   const authorHandle = postDetails.author?.username
     ? `@${postDetails.author.username}`
     : `@${authorName.replace(/\s+/g, "")}`;
