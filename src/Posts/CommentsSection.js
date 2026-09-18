@@ -147,7 +147,7 @@ export default function CommentsSection({
         } else if (MOCK_COMMENTS[postId]) {
           list = MOCK_COMMENTS[postId];
         }
-
+        console.log(list)
         setComments(list);
         if (onCommentsLoaded) {
           onCommentsLoaded(list.length);
