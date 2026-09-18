@@ -1,39 +1,10 @@
 import { useEffect, useState, useRef } from "react";
-import { MoonLoader } from "react-spinners";
 import Post from "./Post";
+import PostSkeleton from "./PostSkeleton";
 import { getPosts } from "../api/posts";
 
-const fallbackPosts = [
-  {
-    _id: "mock-1",
-    category: "Engineering",
-    creationDate: "2026-09-17T14:59:25",
-    author: {
-      name: "User",
-      username: "Xperts_user",
-      pfp_url:
-        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&h=120&q=80",
-    },
-    title: "Helllo",
-    content: "1898394398 , Lorem It's 3.0",
-  },
-  {
-    _id: "mock-2",
-    category: "Engineering",
-    creationDate: "2026-05-11T22:31:42",
-    author: {
-      name: "mattar",
-      username: "mattar",
-      pfp_url:
-        "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&h=120&q=80",
-    },
-    title: "First Post after update",
-    content: "Hallllloosoe, Lorem ipsum dolom sit amet, conse.",
-  },
-];
-
 export default function Posts({ posts, setPosts }) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(posts.length === 0);
   const [loadingMore, setLoadingMore] = useState(false);
   const [page, setPage] = useState(1);
   const fetchedPage = useRef(new Set());
@@ -43,8 +14,12 @@ export default function Posts({ posts, setPosts }) {
     let ignore = false;
     async function fetchData() {
       if (ignore) return;
-      setIsLoading(true);
-      if (page > 1) setLoadingMore(true);
+      if (page === 1) {
+        setIsLoading(true);
+      } else {
+        setLoadingMore(true);
+      }
+
       if (fetchedPage.current.has(page)) {
         setIsLoading(false);
         setLoadingMore(false);
@@ -68,8 +43,10 @@ export default function Posts({ posts, setPosts }) {
       } catch (err) {
         console.error("Failed to load posts:", err);
       } finally {
-        setIsLoading(false);
-        setLoadingMore(false);
+        if (!ignore) {
+          setIsLoading(false);
+          setLoadingMore(false);
+        }
       }
     }
 
@@ -84,17 +61,19 @@ export default function Posts({ posts, setPosts }) {
     setPage((p) => p + 1);
   };
 
-  const displayPosts = posts && posts.length > 0 ? posts : fallbackPosts;
-
   return (
     <div className="w-full">
-      {isLoading && (
-        <div className="py-4">
-          <MoonLoader className="mx-auto" color="#981316" size={32} />
-        </div>
+      {/* Initial load skeletons */}
+      {isLoading && posts.length === 0 && (
+        <>
+          <PostSkeleton />
+          <PostSkeleton />
+          <PostSkeleton />
+        </>
       )}
 
-      {displayPosts.map((post, i) => (
+      {/* Render loaded posts */}
+      {posts.map((post, i) => (
         <Post
           id={`post-${i}`}
           key={post._id || i}
@@ -103,19 +82,29 @@ export default function Posts({ posts, setPosts }) {
         />
       ))}
 
-      {loadingMore && (
-        <div className="py-4">
-          <MoonLoader className="mx-auto" color="#981316" size={28} />
+      {/* Loading more skeleton */}
+      {loadingMore && <PostSkeleton />}
+
+      {/* Empty state when loading finished and no posts exist */}
+      {!isLoading && posts.length === 0 && (
+        <div className="bg-white rounded-2xl p-8 text-center text-gray-500 shadow-sm mb-6">
+          <p className="font-semibold text-gray-700">No posts yet</p>
+          <p className="text-sm mt-1 text-gray-400">
+            Be the first to share something!
+          </p>
         </div>
       )}
 
-      <button
-        onClick={handleSetPage}
-        className="mx-auto my-6 flex items-center justify-center gap-1 text-sm font-semibold text-[#981316] hover:underline"
-      >
-        <span>Load More Posts</span>
-        <span className="text-lg leading-none">&#129171;</span>
-      </button>
+      {posts.length > 0 && (
+        <button
+          onClick={handleSetPage}
+          disabled={loadingMore}
+          className="mx-auto my-6 flex items-center justify-center gap-1 text-sm font-semibold text-[#981316] hover:underline disabled:opacity-50"
+        >
+          <span>Load More Posts</span>
+          <span className="text-lg leading-none">&#129171;</span>
+        </button>
+      )}
     </div>
   );
 }
