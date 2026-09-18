@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ThumbsUp, MessageSquare, CircleUserRound } from "lucide-react";
+import CommentsSection from "./CommentsSection";
 import styles from "./Post.module.css";
 
 export default function Post({ postDetails, index = 0, id }) {
@@ -9,6 +10,12 @@ export default function Post({ postDetails, index = 0, id }) {
 
   const [likes, setLikes] = useState(defaultLikes);
   const [hasLiked, setHasLiked] = useState(false);
+  const [showComments, setShowComments] = useState(false);
+  const [commentsCount, setCommentsCount] = useState(
+    Array.isArray(postDetails?.comments)
+      ? postDetails.comments.length
+      : defaultComments
+  );
 
   if (!postDetails) return null;
 
@@ -97,11 +104,30 @@ export default function Post({ postDetails, index = 0, id }) {
 
         <span className={styles.separator}>|</span>
 
-        <div className={styles.actionItem}>
+        <button
+          type="button"
+          className={`${styles.actionItem} ${
+            showComments ? styles.actionItemActive : ""
+          }`}
+          onClick={() => setShowComments((prev) => !prev)}
+          aria-expanded={showComments}
+        >
           <MessageSquare className={styles.actionIcon} />
-          <span>Comments ({defaultComments})</span>
-        </div>
+          <span>Comments ({commentsCount})</span>
+        </button>
       </div>
+
+      {/* Collapsible Comments Section */}
+      {showComments && (
+        <CommentsSection
+          postId={postDetails._id}
+          onCommentAdded={() => setCommentsCount((prev) => prev + 1)}
+          onCommentDeleted={() =>
+            setCommentsCount((prev) => Math.max(0, prev - 1))
+          }
+          onCommentsLoaded={(count) => setCommentsCount(count)}
+        />
+      )}
     </article>
   );
 }

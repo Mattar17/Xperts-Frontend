@@ -137,6 +137,23 @@ export const useUserStore = create((set, get) => ({
   },
 
   /**
+   * Marks the current user as email verified in store and localStorage.
+   */
+  markEmailVerified: () => {
+    const currentUser = get().user;
+    if (currentUser) {
+      const updated = {
+        ...currentUser,
+        isVerified: true,
+        is_verified: true,
+        emailVerified: true,
+      };
+      localStorage.setItem("user", JSON.stringify(updated));
+      set({ user: updated });
+    }
+  },
+
+  /**
    * Clears user session, cookies, and local storage.
    */
   logout: () => {

@@ -129,6 +129,11 @@
   color: #981316;
 }
 
+.actionItemActive {
+  color: #981316 !important;
+  font-weight: 600;
+}
+
 .actionIcon {
   width: 17px;
   height: 17px;

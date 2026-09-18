@@ -1,25 +1,16 @@
 import SearchBar from "./SearchBar";
 import UserSpace from "./UserSpace";
+import styles from "./Navbar.module.css";
 
-export default function Navbar({ isWritingPost }) {
+export default function Navbar({ isWritingPost, fluid = false }) {
   return (
-    <nav
-      className="
-    h-[56px] sm:h-[64px] lg:h-[70px]
-    px-4 sm:px-6 lg:px-[50px]
-    flex justify-between items-center
-    w-full
-  "
-    >
-      <SearchBar />
+    <nav className={styles.navbar}>
+      <div className={fluid ? styles.navContainerFluid : styles.navContainer}>
+        <SearchBar />
 
-      <div
-        className="
-        flex items-center
-        gap-3 sm:gap-6
-      "
-      >
-        <UserSpace isWritingPost={isWritingPost} />
+        <div className="flex items-center gap-3 sm:gap-6">
+          <UserSpace isWritingPost={isWritingPost} />
+        </div>
       </div>
     </nav>
   );
